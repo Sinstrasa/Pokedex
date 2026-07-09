@@ -43,7 +43,7 @@ async function getMoreTypes(index) {
   typesRef.innerHTML = ``;
   for (let subindex = 0; subindex < responseAsJson.types.length; subindex++) {
     typesRef.innerHTML += `
-                          <p class="types">${responseAsJson.types[subindex].type.name}</p>
+                          <p class="types">${await capitaliseFirstLetter(responseAsJson.types[subindex].type.name)}</p>
                           `;
   }
 }
@@ -57,10 +57,13 @@ async function getName(index) {
 async function createDialog(index) {
   let response = await fetch(BASE_URL + "pokemon/" + index);
   let responseAsJson = await response.json();
-  let dialogRef = document.getElementById("dialog");
+  let dialogRef = document.getElementById("dialogDesign");
   let sprite = await getSprite(index);
   let name = await getName(index);
+  let type = await getType(index);
   dialogRef.innerHTML = dialogCardTemplate(index, sprite, name);
+  let allTypes = dialogGetTypes(index);
+  dialogbg(index, type);
 }
 
 async function defSprite(index) {
@@ -69,7 +72,7 @@ async function defSprite(index) {
   spriteRef.innerHTML = `
                         <img
                         src="${def}"
-                        alt="">
+                        alt="default #${index}">
                         `;
 }
 
@@ -79,8 +82,20 @@ async function shySprite(index) {
   spriteRef.innerHTML = `
                         <img
                         src="${shy}"
-                        alt="">
+                        alt="shiny #${index}">
                         `;
+}
+
+async function dialogGetTypes(index) {
+  let response = await fetch(BASE_URL + "pokemon/" + index);
+  let responseAsJson = await response.json();
+  let typesRef = document.getElementById("dialogTypes");
+  typesRef.innerHTML = ``;
+  for (let subindex = 0; subindex < responseAsJson.types.length; subindex++) {
+    typesRef.innerHTML += `
+                          <p class="types">${await capitaliseFirstLetter(responseAsJson.types[subindex].type.name)}</p>
+                          `;
+  }
 }
 
 function openDialog(index) {

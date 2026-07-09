@@ -1,3 +1,59 @@
 dialog {
     margin: auto;
+    padding: 0px;
+    width: 500px;
+    height: 750px;
+    border: none;
+    border-radius: 32px;
+}
+
+dialog img {
+    width: 300px;
+    height: 300px;
+}
+
+.dialog_design {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.sprite_buttons {
+    display: flex;
+}
+.sprite_buttons > button {
+    width: 250px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}
+
+.dialog_main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 32px;
+    padding-bottom: 8px;
+    width: 100%;
+}
+
+.index_name_type {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    color: white;
+    padding: 0px 60px;
+}
+
+.information_tabs {
+    display: flex;
+}
+
+.information_tabs > button {
+    width: 167px;
+    border-left: none;
+    border-right: none;
 }
