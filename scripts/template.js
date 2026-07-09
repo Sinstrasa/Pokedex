@@ -31,5 +31,9 @@ function dialogCardTemplate(index, sprite, name) {
             <button class="tab" id="abilitesTab" onclick="dialogAbilities(${index})">Abilities</button>
           </section>
           <section class="information" id="informationTab"></section>
+          <section class="switch_id">
+            <button class="arrow_left"><img src="assets/icons/arrow_red.svg" alt="Arrow points left"></button>
+            <button class="arrow_right"><img src="assets/icons/arrow_red.svg" alt="Arrow points right"></button>
+          </section>
           `;
 }

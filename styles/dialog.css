@@ -1,76 +1,103 @@
 dialog {
-    margin: auto;
-    padding: 0px;
-    width: 500px;
-    height: 750px;
-    border: none;
-    border-radius: 32px;
+  margin: auto;
+  padding: 0px;
+  width: 500px;
+  height: 750px;
+  border: none;
+  border-radius: 32px;
 }
 
 dialog img {
-    width: 300px;
-    height: 300px;
+  width: 300px;
+  height: 300px;
 }
 
 .dialog_design {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .dialog_design p {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 .sprite_buttons {
-    display: flex;
+  display: flex;
 }
 .sprite_buttons > button {
-    width: 250px;
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    font-size: 20px;
-    font-weight: 500;
+  width: 250px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .dialog_main {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 32px;
-    padding-bottom: 8px;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 32px;
+  padding-bottom: 8px;
+  width: 100%;
 }
 
 .index_name_type {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    width: 100%;
-    color: white;
-    padding: 0px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  color: white;
+  padding: 0px 60px;
 }
 
 .information_tabs {
-    display: flex;
+  display: flex;
 }
 
 .information_tabs > button {
-    width: 167px;
-    border-left: none;
-    border-right: none;
-    font-size: 20px;
-    font-weight: 500;
+  width: 167px;
+  border-left: none;
+  border-right: none;
+  font-size: 20px;
+  font-weight: 500;
 }
 
 .information {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    width: 100%;
-    padding-top: 16px;
-    padding-left: 45px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding-top: 16px;
+}
+
+.switch_id {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0px 45px;
+}
+
+.arrow_left,
+.arrow_right {
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(255, 0, 0, 0.2);;
+}
+
+.arrow_left:hover,
+.arrow_right:hover {
+    background-color: rgba(255, 0, 0, 0.3);
+}
+
+.arrow_left > img,
+.arrow_right > img {
+  width: 32px;
+  height: 32px;
 }
