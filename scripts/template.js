@@ -26,9 +26,9 @@ function dialogCardTemplate(index, sprite, name) {
             </div>
           </section>
           <section class="information_tabs">
-            <button class="tab" id="generalTab">General</button>
-            <button class="tab" id="statsTab">Stats</button>
-            <button class="tab" id="abilitesTab">Abilities</button>
+            <button class="tab" id="generalTab" onclick="dialogGeneral(${index})">General</button>
+            <button class="tab" id="statsTab" onclick="dialogStats(${index})">Stats</button>
+            <button class="tab" id="abilitesTab" onclick="dialogAbilities(${index})">Abilities</button>
           </section>
           <section class="information" id="informationTab"></section>
           `;

@@ -98,6 +98,45 @@ async function dialogGetTypes(index) {
   }
 }
 
+async function dialogGeneral(index) {
+  let response = await fetch(BASE_URL + "pokemon/" + index);
+  let responseAsJson = await response.json();
+  let infoRef = document.getElementById("informationTab");
+  infoRef.innerHTML = ``;
+  let baseXp = responseAsJson.base_experience;
+  let height = responseAsJson.height;
+  let weight = responseAsJson.weight;
+  infoRef.innerHTML = `
+                      <p>Base Exp: ${await baseXp}xp</p>
+                      <p>Height: ${await height}cm</p>
+                      <p>Weight: ${await weight}g</p>
+                      `;
+}
+
+async function dialogStats(index) {
+  let response = await fetch(BASE_URL + "pokemon/" + index);
+  let responseAsJson = await response.json();
+  let infoRef = document.getElementById("informationTab");
+  infoRef.innerHTML = ``;
+  for (let subindex = 0; subindex < responseAsJson.stats.length; subindex++) {
+    infoRef.innerHTML +=  `
+                          <p>${await capitaliseFirstLetter(responseAsJson.stats[subindex].stat.name)}: ${await responseAsJson.stats[subindex].base_stat}</p>
+                          `;
+  }
+}
+
+async function dialogAbilities(index) {
+  let response = await fetch(BASE_URL + "pokemon/" + index);
+  let responseAsJson = await response.json();
+  let infoRef = document.getElementById("informationTab");
+  infoRef.innerHTML = ``;
+  for (let subindex = 0; subindex < responseAsJson.stats.length; subindex++) {
+    infoRef.innerHTML +=  `
+                          <p>${await capitaliseFirstLetter(responseAsJson.abilities[subindex].ability.name)}</p>
+                          `;
+  }
+}
+
 function openDialog(index) {
   let dialogRef = document.getElementById("dialog");
   createDialog(index);
@@ -121,5 +160,5 @@ async function capitaliseFirstLetter(name) {
 async function search() {
   let response = await fetch(BASE_URL + "pokemon/" + 1);
   let responseAsJson = await response.json();
-  console.log(responseAsJson.sprites.other.home.front_shiny);
+  console.log(responseAsJson.abilities[0].ability.name);
 }

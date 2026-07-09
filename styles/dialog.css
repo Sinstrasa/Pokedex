@@ -19,6 +19,10 @@ dialog img {
     align-items: center;
 }
 
+.dialog_design p {
+    font-size: 18px;
+}
+
 .sprite_buttons {
     display: flex;
 }
@@ -27,6 +31,8 @@ dialog img {
     border-top: none;
     border-left: none;
     border-right: none;
+    font-size: 20px;
+    font-weight: 500;
 }
 
 .dialog_main {
@@ -56,4 +62,15 @@ dialog img {
     width: 167px;
     border-left: none;
     border-right: none;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.information {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    padding-top: 16px;
+    padding-left: 45px;
 }
