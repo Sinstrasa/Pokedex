@@ -24,6 +24,12 @@ async function getSprite(index) {
   return responseAsJson.sprites.other.home.front_default;
 }
 
+async function getShiny(index) {
+  let response = await fetch(BASE_URL + "pokemon/" + index);
+  let responseAsJson = await response.json();
+  return responseAsJson.sprites.other.home.front_shiny;
+}
+
 async function getType(index) {
   let response = await fetch(BASE_URL + "pokemon/" + index);
   let responseAsJson = await response.json();
@@ -49,7 +55,32 @@ async function getName(index) {
 }
 
 async function createDialog(index) {
-  
+  let response = await fetch(BASE_URL + "pokemon/" + index);
+  let responseAsJson = await response.json();
+  let dialogRef = document.getElementById("dialog");
+  let sprite = await getSprite(index);
+  let name = await getName(index);
+  dialogRef.innerHTML = dialogCardTemplate(index, sprite, name);
+}
+
+async function defSprite(index) {
+  let spriteRef = document.getElementById("dialogPokémonSprite");
+  let def = await getSprite(index);
+  spriteRef.innerHTML = `
+                        <img
+                        src="${def}"
+                        alt="">
+                        `;
+}
+
+async function shySprite(index) {
+  let spriteRef = document.getElementById("dialogPokémonSprite");
+  let shy = await getShiny(index);
+  spriteRef.innerHTML = `
+                        <img
+                        src="${shy}"
+                        alt="">
+                        `;
 }
 
 function openDialog(index) {
@@ -75,5 +106,5 @@ async function capitaliseFirstLetter(name) {
 async function search() {
   let response = await fetch(BASE_URL + "pokemon/" + 1);
   let responseAsJson = await response.json();
-  console.log(responseAsJson.types);
+  console.log(responseAsJson.sprites.other.home.front_shiny);
 }
