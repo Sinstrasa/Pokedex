@@ -1,0 +1,20 @@
+:root {
+  --bg_bug: rgb(168, 184, 32);
+  --bg_fire: rgb(240, 128, 48);
+  --bg_normal: rgb(168, 168, 120);
+  --bg_dark: rgb(112, 88, 72);
+  --bg_flying: rgb(168, 144, 240);
+  --bg_poison: rgb(160, 64, 160);
+  --bg_dragon: rgb(112, 56, 248);
+  --bg_ghost: rgb(112, 88, 152);
+  --bg_psychic: rgb(248, 88, 136);
+  --bg_electric: rgb(248, 208, 48);
+  --bg_grass: rgb(120, 200, 80);
+  --bg_rock: rgb(184, 160, 56);
+  --bg_fairy: rgb(238, 153, 172);
+  --bg_ground: rgb(224, 192, 104);
+  --bg_steel: rgb(184, 184, 208);
+  --bg_fighting: rgb(192, 48, 40);
+  --bg_ice: rgb(152, 216, 216);
+  --bg_water: rgb(104, 144, 240);
+}

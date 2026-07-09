@@ -1,0 +1,43 @@
+* {
+  margin: 0px;
+  box-sizing: border-box;
+  font-family: "Noto Sans";
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+button:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px max(calc(50% - 720px), 100px);
+  background-color: red;
+}
+
+h1 {
+  font-weight: 700;
+}
+
+main {
+  flex: 1;
+}
+
+footer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding-top: 30px;
+  padding-bottom: 10px;
+  background-color: darkblue;
+}

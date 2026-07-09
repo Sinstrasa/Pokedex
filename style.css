@@ -1,0 +1,66 @@
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: white;
+}
+
+.logo > img {
+  width: 48px;
+  height: 48px;
+}
+
+.poké_cards{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  padding: 60px max(calc(50% - 720px), 45px);
+  flex-wrap: wrap;
+}
+
+.pokémon {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: 200px;
+  height: 200px;
+  border: none;
+  border-radius: 16px;
+  color: white;
+}
+
+.sprite_n_types {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.sprites > img {
+  width: 100px;
+  height: 100px;
+}
+
+.all_types {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.types {
+  padding: 4px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+}
+
+.da {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.copyright {
+  color: white;
+}
