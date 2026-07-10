@@ -12,9 +12,16 @@ dialog img {
   height: 300px;
 }
 
+dialog::backdrop {
+  backdrop-filter: blur(4px);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
 .dialog_design {
   display: flex;
   flex-direction: column;
+  position: relative;
+  height: 740px;
 }
 
 .dialog_design p {
@@ -76,8 +83,21 @@ dialog img {
 .switch_id {
   display: flex;
   justify-content: space-between;
+  position: absolute;
+  bottom: 0px;
   width: 100%;
   padding: 0px 45px;
+}
+
+.close {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.close p {
+  font-size: 24px;
+  font-weight: 700;
 }
 
 .arrow_left,
@@ -86,7 +106,7 @@ dialog img {
   height: 50px;
   border: none;
   border-radius: 50%;
-  background-color: rgba(255, 0, 0, 0.2);;
+  background-color: rgba(255, 0, 0, 0.2);
 }
 
 .arrow_left > img {
@@ -94,7 +114,8 @@ dialog img {
 }
 
 .arrow_left:hover,
-.arrow_right:hover {
+.arrow_right:hover,
+.close:hover {
     background-color: rgba(255, 0, 0, 0.3);
 }
 

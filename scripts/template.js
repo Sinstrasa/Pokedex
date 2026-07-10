@@ -35,6 +35,9 @@ function dialogCardTemplate(index, sprite, name) {
             <button class="arrow_left" id="left" onclick="switchPokémon(${index}, ${false}), getFocus('left')">
               <img src="assets/icons/arrow_red.svg" alt="Arrow points left">
             </button>
+            <button class="close" onclick="closeDialog()">
+              <p>X</p>
+            </button>
             <button class="arrow_right" id="right" onclick="switchPokémon(${index}, ${true}), getFocus('right')">
               <img src="assets/icons/arrow_red.svg" alt="Arrow points right">
             </button>

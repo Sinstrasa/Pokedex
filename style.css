@@ -15,7 +15,7 @@
   justify-content: center;
   align-items: center;
   gap: 16px;
-  padding: 60px max(calc(50% - 720px), 45px);
+  padding: 60px max(calc(50% - 750px), 45px);
   flex-wrap: wrap;
 }
 
@@ -53,6 +53,14 @@
   padding: 4px;
   background-color: rgba(255, 255, 255, 0.3);
   border-radius: 8px;
+}
+
+.change_page {
+  display: flex;
+  gap: 32px;
+  position: absolute;
+  bottom: 0px;
+  padding: 0px max(calc(50% - 600px), 100px);
 }
 
 .da {

@@ -28,6 +28,7 @@ h1 {
 }
 
 main {
+  position: relative;
   flex: 1;
 }
 
