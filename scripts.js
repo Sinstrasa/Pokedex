@@ -2,25 +2,65 @@ const BASE_URL = "https://pokeapi.co/api/v2/";
 const begin = 1;
 const end = 21;
 let page = 1;
+let idAkku = [];
 
 function initialise() {
   addPokémon();
   search();
 }
 
-function switchPage(forward) {
-  if (forward) {
-    page++;
-    if (page > 52) {
-      page = 1;
-    }
-  } else {
-    page--;
-    if (page <= 0) {
-      page = 52;
+function validateSearch() {
+  let contentRef = document.getElementById("pokéCards");
+  contentRef.innerHTML = ``;
+  let searchRef = document.getElementById("searchInput").value;
+  switch (searchRef.length) {
+    case 0:
+      addPokémon();
+      break;
+    case (1, 2):
+      contentRef.innerHTML = `<p>Not enough characters! Please search with more than 3 characters.</p>`;
+      break;
+    default:
+      searchPoké(searchRef);
+      break;
+  }
+}
+
+async function searchPoké(input) {
+  let contentRef = document.getElementById("pokéCards");
+  contentRef.innerHTML = ``;
+  idAkku = [];
+  for (let index = 1; index < 1026; index++) {
+    let response = await fetch(BASE_URL + "pokemon/" + index);
+    let responseAsJson = await response.json();
+    if (
+      input.at[0] == responseAsJson.forms[0].name.at[0] &&
+      input.at[1] == responseAsJson.forms[0].name.at[1] &&
+      input.at[2] == responseAsJson.forms[0].name.at[2]
+    ) {
+      idAkku.push(index);
     }
   }
-  addPokémon();
+  if (idAkku.length == 0) {
+    contentRef.innerHTML = `<p>No Pokémon found with these characters.</p>`;
+  } else {
+    addSearch();
+  }
+}
+
+async function addSearch() {
+  let contentRef = document.getElementById("pokéCards");
+  contentRef.innerHTML = ``;
+  for (let index = 0; index < idAkku.length; index++) {
+    let response = await fetch(BASE_URL + "pokemon/" + idAkku[index]);
+    let responseAsJson = await response.json();
+    let sprite = await getSprite(index);
+    let type = await getType(index);
+    let name = await getName(index);
+    contentRef.innerHTML += pokémonCardtemplate(index, sprite, name);
+    let allTypes = await getMoreTypes(index);
+    bgColor(index, type);
+  }
 }
 
 async function addPokémon() {
@@ -171,12 +211,27 @@ async function switchPokémon(index, forward) {
       createDialog(index + 1);
     }
   } else {
-    if (index - 1 < (begin + 20 * (page - 1))) {
-      createDialog(safe-1);
+    if (index - 1 < begin + 20 * (page - 1)) {
+      createDialog(safe - 1);
     } else {
       createDialog(index - 1);
     }
   }
+}
+
+function switchPage(forward) {
+  if (forward) {
+    page++;
+    if (page > 52) {
+      page = 1;
+    }
+  } else {
+    page--;
+    if (page <= 0) {
+      page = 52;
+    }
+  }
+  addPokémon();
 }
 
 function openDialog(index) {

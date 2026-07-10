@@ -27,12 +27,21 @@
         <h1>Pokédex</h1>
       </section>
       <section>
-        <input type="text" />
-        <button>Search</button>
+        <input id="searchInput" type="text" />
+        <button onclick="validateSearch()">Search</button>
       </section>
     </header>
     <main data-id="content">
       <section class="poké_cards" id="pokéCards"></section>
+      <section>
+        <dialog id="dialog" data-id="dialog" onclick="closeDialog()">
+          <article
+            class="dialog_design"
+            id="dialogDesign"
+            onclick="stopPropagation(event)"
+          ></article>
+        </dialog>
+      </section>
       <section class="change_page">
         <button
           id="previous"
@@ -43,15 +52,6 @@
         <button id="next" onclick="(switchPage(true), getFocus('next'))">
           <p>Next Page</p>
         </button>
-      </section>
-      <section>
-        <dialog id="dialog" data-id="dialog" onclick="closeDialog()">
-          <article
-            class="dialog_design"
-            id="dialogDesign"
-            onclick="stopPropagation(event)"
-          ></article>
-        </dialog>
       </section>
     </main>
     <footer>
