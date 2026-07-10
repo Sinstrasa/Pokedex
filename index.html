@@ -34,6 +34,14 @@
     <main data-id="content">
       <section class="poké_cards" id="pokéCards"></section>
       <section>
+        <button id="previous" onclick="switchPage(false), getFocus('previous')">
+          <p>Previous Page</p>
+        </button>
+        <button id="next" onclick="switchPage(true), getFocus('next')">
+          <p>Next Page</p>
+        </button>
+      </section>
+      <section>
         <dialog id="dialog" data-id="dialog">
           <article class="dialog_design" id="dialogDesign" onclick="stopPropagation(event)"></article>
         </dialog>

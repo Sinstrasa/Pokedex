@@ -15,8 +15,6 @@ dialog img {
 .dialog_design {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
 }
 
 .dialog_design p {
@@ -89,6 +87,10 @@ dialog img {
   border: none;
   border-radius: 50%;
   background-color: rgba(255, 0, 0, 0.2);;
+}
+
+.arrow_left > img {
+  transform: rotate(180deg);
 }
 
 .arrow_left:hover,
