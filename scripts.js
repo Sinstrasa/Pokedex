@@ -11,12 +11,12 @@ function initialise() {
 function switchPage(forward) {
   if (forward) {
     page++;
-    if (page == 52) {
+    if (page > 52) {
       page = 1;
     }
   } else {
     page--;
-    if (page == 0) {
+    if (page <= 0) {
       page = 52;
     }
   }
@@ -160,15 +160,19 @@ async function dialogAbilities(index) {
 }
 
 async function switchPokémon(index, forward) {
+  let safe = end + 20 * (page - 1);
+  if (safe > 1022) {
+    safe = 1026;
+  }
   if (forward) {
-    if (index + 1 == end + 20 * (page - 1)) {
+    if (index + 1 == safe) {
       createDialog(begin + 20 * (page - 1));
     } else {
       createDialog(index + 1);
     }
   } else {
-    if (index - 1 == 0) {
-      createDialog(end - 1 + 20 * (page - 1));
+    if (index - 1 < (begin + 20 * (page - 1))) {
+      createDialog(safe-1);
     } else {
       createDialog(index - 1);
     }
