@@ -6,6 +6,8 @@ let idAkku = [];
 
 function initialise() {
   addPokémon();
+  document.getElementById("searchInput").value =
+    "Leave it empty to reveal normal content";
   search();
 }
 
@@ -21,7 +23,7 @@ function validateSearch() {
       contentRef.innerHTML = `<p>Not enough characters! Please search with more than 3 characters.</p>`;
       break;
     default:
-      searchPoké(searchRef);
+      searchPoké(searchRef.toLowerCase());
       break;
   }
 }
@@ -29,15 +31,13 @@ function validateSearch() {
 async function searchPoké(input) {
   let contentRef = document.getElementById("pokéCards");
   contentRef.innerHTML = ``;
+  let safe = end + 20 * (page - 1);
   idAkku = [];
-  for (let index = 1; index < 1026; index++) {
+  for (let index = begin; index < safe; index++) {
     let response = await fetch(BASE_URL + "pokemon/" + index);
     let responseAsJson = await response.json();
-    if (
-      input.at[0] == responseAsJson.forms[0].name.at[0] &&
-      input.at[1] == responseAsJson.forms[0].name.at[1] &&
-      input.at[2] == responseAsJson.forms[0].name.at[2]
-    ) {
+    let compare = (await responseAsJson.forms[0].name).slice(0, input.length);
+    if (input == compare) {
       idAkku.push(index);
     }
   }
@@ -54,12 +54,12 @@ async function addSearch() {
   for (let index = 0; index < idAkku.length; index++) {
     let response = await fetch(BASE_URL + "pokemon/" + idAkku[index]);
     let responseAsJson = await response.json();
-    let sprite = await getSprite(index);
-    let type = await getType(index);
-    let name = await getName(index);
-    contentRef.innerHTML += pokémonCardtemplate(index, sprite, name);
-    let allTypes = await getMoreTypes(index);
-    bgColor(index, type);
+    let sprite = await getSprite(idAkku[index]);
+    let type = await getType(idAkku[index]);
+    let name = await getName(idAkku[index]);
+    contentRef.innerHTML += pokémonCardtemplate(idAkku[index], sprite, name);
+    let allTypes = await getMoreTypes(idAkku[index]);
+    bgColor(idAkku[index], type);
   }
 }
 
@@ -261,5 +261,5 @@ function getFocus(id) {
 async function search() {
   let response = await fetch(BASE_URL + "pokemon/" + 1);
   let responseAsJson = await response.json();
-  console.log(responseAsJson.abilities[0].ability.name);
+  console.log(await responseAsJson.forms[0].name);
 }

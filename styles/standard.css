@@ -27,6 +27,10 @@ h1 {
   font-weight: 700;
 }
 
+input {
+  width: 275px;
+}
+
 main {
   display: flex;
   flex-direction: column;
