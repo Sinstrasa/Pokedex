@@ -3,12 +3,25 @@ const begin = 1;
 const end = 21;
 let page = 1;
 let idAkku = [];
+let safe = 0;
 
 function initialise() {
   addPokémon();
   document.getElementById("searchInput").value =
     "Leave it empty to reveal normal content";
   search();
+}
+
+function restrainEnd() {
+  safe = end + 20 * (page - 1);
+  if (safe > 1022) {
+    safe = 1026;
+  }
+}
+
+async function definePath(index) {
+  let response = await fetch(BASE_URL + "pokemon/" + index);
+  return await response.json();
 }
 
 function validateSearch() {
@@ -30,12 +43,10 @@ function validateSearch() {
 
 async function searchPoké(input) {
   let contentRef = document.getElementById("pokéCards");
-  contentRef.innerHTML = ``;
-  let safe = end + 20 * (page - 1);
+  restrainEnd();
   idAkku = [];
   for (let index = begin; index < safe; index++) {
-    let response = await fetch(BASE_URL + "pokemon/" + index);
-    let responseAsJson = await response.json();
+    let responseAsJson = await definePath(index);
     let compare = (await responseAsJson.forms[0].name).slice(0, input.length);
     if (input == compare) {
       idAkku.push(index);
@@ -50,10 +61,8 @@ async function searchPoké(input) {
 
 async function addSearch() {
   let contentRef = document.getElementById("pokéCards");
-  contentRef.innerHTML = ``;
   for (let index = 0; index < idAkku.length; index++) {
-    let response = await fetch(BASE_URL + "pokemon/" + idAkku[index]);
-    let responseAsJson = await response.json();
+    let responseAsJson = await definePath(idAkku[index]);
     let sprite = await getSprite(idAkku[index]);
     let type = await getType(idAkku[index]);
     let name = await getName(idAkku[index]);
@@ -65,42 +74,40 @@ async function addSearch() {
 
 async function addPokémon() {
   let contentRef = document.getElementById("pokéCards");
-  let safe = end + 20 * (page - 1);
-  if (safe > 1022) {
-    safe = 1026;
-  }
   contentRef.innerHTML = ``;
+  restrainEnd();
   for (let index = begin + 20 * (page - 1); index < safe; index++) {
-    let sprite = await getSprite(index);
-    let type = await getType(index);
-    let name = await getName(index);
-    contentRef.innerHTML += pokémonCardtemplate(index, sprite, name);
-    let allTypes = await getMoreTypes(index);
-    bgColor(index, type);
+    styleCard(index);
   }
 }
 
+async function styleCard(index) {
+  let contentRef = document.getElementById("pokéCards");
+  let sprite = await getSprite(index);
+  let type = await getType(index);
+  let name = await getName(index);
+  contentRef.innerHTML += pokémonCardtemplate(index, sprite, name);
+  let allTypes = await getMoreTypes(index);
+  bgColor(index, type);
+}
+
 async function getSprite(index) {
-  let response = await fetch(BASE_URL + "pokemon/" + index);
-  let responseAsJson = await response.json();
+  let responseAsJson = await definePath(index);
   return responseAsJson.sprites.other.home.front_default;
 }
 
 async function getShiny(index) {
-  let response = await fetch(BASE_URL + "pokemon/" + index);
-  let responseAsJson = await response.json();
+  let responseAsJson = await definePath(index);
   return responseAsJson.sprites.other.home.front_shiny;
 }
 
 async function getType(index) {
-  let response = await fetch(BASE_URL + "pokemon/" + index);
-  let responseAsJson = await response.json();
+  let responseAsJson = await definePath(index);
   return responseAsJson.types[0].type.name;
 }
 
 async function getMoreTypes(index) {
-  let response = await fetch(BASE_URL + "pokemon/" + index);
-  let responseAsJson = await response.json();
+  let responseAsJson = await definePath(index);
   let typesRef = document.getElementById("allTypes" + index);
   typesRef.innerHTML = ``;
   for (let subindex = 0; subindex < responseAsJson.types.length; subindex++) {
@@ -111,14 +118,12 @@ async function getMoreTypes(index) {
 }
 
 async function getName(index) {
-  let response = await fetch(BASE_URL + "pokemon/" + index);
-  let responseAsJson = await response.json();
+  let responseAsJson = await definePath(index);
   return capitaliseFirstLetter(responseAsJson.forms[0].name);
 }
 
 async function createDialog(index) {
-  let response = await fetch(BASE_URL + "pokemon/" + index);
-  let responseAsJson = await response.json();
+  let responseAsJson = await definePath(index);
   let dialogRef = document.getElementById("dialogDesign");
   let sprite = await getSprite(index);
   let name = await getName(index);
@@ -149,8 +154,7 @@ async function shySprite(index) {
 }
 
 async function dialogGetTypes(index) {
-  let response = await fetch(BASE_URL + "pokemon/" + index);
-  let responseAsJson = await response.json();
+  let responseAsJson = await definePath(index);
   let typesRef = document.getElementById("dialogTypes");
   typesRef.innerHTML = ``;
   for (let subindex = 0; subindex < responseAsJson.types.length; subindex++) {
@@ -161,8 +165,7 @@ async function dialogGetTypes(index) {
 }
 
 async function dialogGeneral(index) {
-  let response = await fetch(BASE_URL + "pokemon/" + index);
-  let responseAsJson = await response.json();
+  let responseAsJson = await definePath(index);
   let infoRef = document.getElementById("informationTab");
   infoRef.innerHTML = ``;
   let baseXp = responseAsJson.base_experience;
@@ -176,8 +179,7 @@ async function dialogGeneral(index) {
 }
 
 async function dialogStats(index) {
-  let response = await fetch(BASE_URL + "pokemon/" + index);
-  let responseAsJson = await response.json();
+  let responseAsJson = await definePath(index);
   let infoRef = document.getElementById("informationTab");
   infoRef.innerHTML = ``;
   for (let subindex = 0; subindex < responseAsJson.stats.length; subindex++) {
@@ -188,8 +190,7 @@ async function dialogStats(index) {
 }
 
 async function dialogAbilities(index) {
-  let response = await fetch(BASE_URL + "pokemon/" + index);
-  let responseAsJson = await response.json();
+  let responseAsJson = await definePath(index);
   let infoRef = document.getElementById("informationTab");
   infoRef.innerHTML = ``;
   for (let subindex = 0; subindex < responseAsJson.stats.length; subindex++) {
@@ -200,10 +201,7 @@ async function dialogAbilities(index) {
 }
 
 async function switchPokémon(index, forward) {
-  let safe = end + 20 * (page - 1);
-  if (safe > 1022) {
-    safe = 1026;
-  }
+  restrainEnd();
   if (forward) {
     if (index + 1 == safe) {
       createDialog(begin + 20 * (page - 1));
