@@ -43,7 +43,8 @@ function validateSearch() {
     case 0:
       addPokémon();
       break;
-    case 1 || 2:
+    case 1:
+    case 2:
       contentRef.innerHTML = `<p>Not enough characters! Please search with more than 3 characters.</p>`;
       hideOverlay()
       break;
