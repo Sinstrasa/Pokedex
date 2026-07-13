@@ -27,8 +27,16 @@
         <h1>Pokédex</h1>
       </section>
       <section class="search_section">
-        <input id="searchInput" data-id="search-input" type="text" />
-        <button class="search_button" data-id="search-button" onclick="validateSearch()">
+        <button class="reset_button" id="resetButton" onclick="resetPage()">
+          Reset
+        </button>
+        <input id="searchInput" data-id="search-input" type="search" />
+        <button
+          class="search_button"
+          id="searchButton"
+          data-id="search-button"
+          onclick="validateSearch()"
+        >
           Search
         </button>
       </section>

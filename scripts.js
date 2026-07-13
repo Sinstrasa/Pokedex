@@ -7,8 +7,6 @@ let safe = 0;
 
 function initialise() {
   addPokémon();
-  document.getElementById("searchInput").value =
-    "Leave it empty to reveal all Pokémons";
   // search();
 }
 
@@ -19,14 +17,35 @@ function restrainEnd() {
   }
 }
 
+async function resetPage() {
+  document.getElementById("searchInput").value = "";
+  addPokémon();
+}
+
 function showOverlay() {
   let overlayRef = document.getElementById("overlay");
   overlayRef.classList.add("overlay_visible");
+  disableButtons();
 }
 
 function hideOverlay() {
   let overlayRef = document.getElementById("overlay");
   overlayRef.classList.remove("overlay_visible");
+  enableButtons();
+}
+
+function disableButtons() {
+  document.getElementById("resetButton").disabled = true;
+  document.getElementById("searchButton").disabled = true;
+  document.getElementById("previous").disabled = true;
+  document.getElementById("next").disabled = true;
+}
+
+function enableButtons() {
+  document.getElementById("resetButton").disabled = false;
+  document.getElementById("searchButton").disabled = false;
+  document.getElementById("previous").disabled = false;
+  document.getElementById("next").disabled = false;
 }
 
 async function definePath(index) {
@@ -46,7 +65,7 @@ function validateSearch() {
     case 1:
     case 2:
       contentRef.innerHTML = `<p>Not enough characters! Please search with more than 3 characters.</p>`;
-      hideOverlay()
+      hideOverlay();
       break;
     default:
       searchPoké(searchRef.toLowerCase());
