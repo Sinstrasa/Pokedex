@@ -236,11 +236,13 @@ function openDialog(index) {
   let dialogRef = document.getElementById("dialog");
   createDialog(index);
   dialogRef.showModal();
+  document.body.classList.toggle("dialog_offen");
 }
 
 function closeDialog() {
   let dialogRef = document.getElementById("dialog");
   dialogRef.close();
+  document.body.classList.toggle("dialog_offen");
 }
 
 function stopPropagation(event) {
