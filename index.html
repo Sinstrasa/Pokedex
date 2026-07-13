@@ -27,8 +27,10 @@
         <h1>Pokédex</h1>
       </section>
       <section>
-        <input id="searchInput" type="text" />
-        <button onclick="validateSearch()">Search</button>
+        <input id="searchInput" data-id="search-input" type="text" />
+        <button data-id="search-button" onclick="validateSearch()">
+          Search
+        </button>
       </section>
     </header>
     <main data-id="content">
@@ -45,11 +47,16 @@
       <section class="change_page">
         <button
           id="previous"
+          data-id="load-more"
           onclick="(switchPage(false), getFocus('previous'))"
         >
           <p>Previous Page</p>
         </button>
-        <button id="next" onclick="(switchPage(true), getFocus('next'))">
+        <button
+          id="next"
+          data-id="load-more"
+          onclick="(switchPage(true), getFocus('next'))"
+        >
           <p>Next Page</p>
         </button>
       </section>

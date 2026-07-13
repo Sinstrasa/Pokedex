@@ -1,9 +1,9 @@
 function pokémonCardtemplate(index, sprite, name) {
   return `
-        <button class="pokémon" id="card${+index}" onclick="openDialog(${index})">
+        <button class="pokémon" id="card${+index}" data-id="card" onclick="openDialog(${index})">
             <p>#${index}</p>
             <section class="sprite_n_types">
-                <div class="sprites"><img src="${sprite}" alt="Picture of Pokémon Nr. ${index}"></div>
+                <div class="sprites" data-id="card-image"><img src="${sprite}" alt="Picture of Pokémon Nr. ${index}"></div>
                 <div class="all_types" id="allTypes${+index}"></div>
             </section>
             <p>${name}</p>
@@ -18,8 +18,8 @@ function dialogCardTemplate(index, sprite, name) {
             <button id="shinySprite" onclick="shySprite(${index})">Shiny</button>
           </section>
           <section class="dialog_main" id="dialogMain">
-            <div id="dialogPokémonSprite"><img src="${sprite}" alt="Default ${name}"></div>
-            <div class="index_name_type">
+            <div id="dialogPokémonSprite" data-id="dialog-image"><img src="${sprite}" alt="Default ${name}"></div>
+            <div data-id="overlay-pokemon-name" class="index_name_type">
               <p>#${index}</p>
               <p>${name}</p>
               <div class="all_types" id="dialogTypes"></div>
@@ -32,13 +32,13 @@ function dialogCardTemplate(index, sprite, name) {
           </section>
           <section class="information" id="informationTab"></section>
           <section class="switch_id">
-            <button class="arrow_left" id="left" onclick="switchPokémon(${index}, ${false}), getFocus('left')">
+            <button class="arrow_left" id="left" data-id="prev-button" onclick="switchPokémon(${index}, ${false}), getFocus('left')">
               <img src="assets/icons/arrow_red.svg" alt="Arrow points left">
             </button>
-            <button class="close" onclick="closeDialog()">
+            <button data-id="close-dialog-button" class="close" onclick="closeDialog()">
               <p>X</p>
             </button>
-            <button class="arrow_right" id="right" onclick="switchPokémon(${index}, ${true}), getFocus('right')">
+            <button class="arrow_right" id="right" data-id="next-button" onclick="switchPokémon(${index}, ${true}), getFocus('right')">
               <img src="assets/icons/arrow_red.svg" alt="Arrow points right">
             </button>
           </section>

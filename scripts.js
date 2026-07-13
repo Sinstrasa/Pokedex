@@ -8,8 +8,8 @@ let safe = 0;
 function initialise() {
   addPokémon();
   document.getElementById("searchInput").value =
-    "Leave it empty to reveal normal content";
-  search();
+    "Leave it empty to reveal all Pokémons";
+  // search();
 }
 
 function restrainEnd() {
@@ -53,7 +53,7 @@ async function searchPoké(input) {
     }
   }
   if (idAkku.length == 0) {
-    contentRef.innerHTML = `<p>No Pokémon found with these characters.</p>`;
+    contentRef.innerHTML = `<p data-id="not-found">No Pokémon found with these characters.</p>`;
   } else {
     addSearch();
   }
