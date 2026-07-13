@@ -7,11 +7,13 @@
   .search_section {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 16px;
   }
 
+  .reset_button,
   .search_button {
-    width: 275px;
+    width: 200px;
   }
 
   .gif {

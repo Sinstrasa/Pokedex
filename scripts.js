@@ -266,6 +266,7 @@ function switchPage(forward) {
       page = 52;
     }
   }
+  showPage();
   addPokémon();
 }
 
@@ -292,6 +293,11 @@ async function capitaliseFirstLetter(name) {
 
 function getFocus(id) {
   document.getElementById(id).focus();
+}
+
+function showPage() {
+  let pageRef = document.getElementById("page");
+  pageRef.innerHTML = `Page ${page} / 52`
 }
 
 // Checking for specific elements and its paths
