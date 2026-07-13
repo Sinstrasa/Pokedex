@@ -116,7 +116,7 @@ dialog::backdrop {
 .arrow_left:hover,
 .arrow_right:hover,
 .close:hover {
-    background-color: rgba(255, 0, 0, 0.3);
+  background-color: rgba(255, 0, 0, 0.3);
 }
 
 .arrow_left > img,

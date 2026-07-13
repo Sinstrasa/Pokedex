@@ -10,6 +10,29 @@
   height: 48px;
 }
 
+.overlay {
+  display: none;
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  z-index: 2;
+}
+
+.overlay_visible {
+  display: block;
+}
+
+.gif {
+  position: absolute;
+  top: 42%;
+  left: 42%;
+}
+
 .poké_cards{
   display: flex;
   justify-content: center;

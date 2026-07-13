@@ -19,12 +19,23 @@ function restrainEnd() {
   }
 }
 
+function showOverlay() {
+  let overlayRef = document.getElementById("overlay");
+  overlayRef.classList.add("overlay_visible");
+}
+
+function hideOverlay() {
+  let overlayRef = document.getElementById("overlay");
+  overlayRef.classList.remove("overlay_visible");
+}
+
 async function definePath(index) {
   let response = await fetch(BASE_URL + "pokemon/" + index);
   return await response.json();
 }
 
 function validateSearch() {
+  showOverlay();
   let contentRef = document.getElementById("pokéCards");
   contentRef.innerHTML = ``;
   let searchRef = document.getElementById("searchInput").value;
@@ -32,8 +43,9 @@ function validateSearch() {
     case 0:
       addPokémon();
       break;
-    case (1, 2):
+    case 1 || 2:
       contentRef.innerHTML = `<p>Not enough characters! Please search with more than 3 characters.</p>`;
+      hideOverlay()
       break;
     default:
       searchPoké(searchRef.toLowerCase());
@@ -43,9 +55,8 @@ function validateSearch() {
 
 async function searchPoké(input) {
   let contentRef = document.getElementById("pokéCards");
-  restrainEnd();
   idAkku = [];
-  for (let index = begin; index < safe; index++) {
+  for (let index = 1; index < 1026; index++) {
     let responseAsJson = await definePath(index);
     let compare = (await responseAsJson.forms[0].name).slice(0, input.length);
     if (input == compare) {
@@ -54,6 +65,7 @@ async function searchPoké(input) {
   }
   if (idAkku.length == 0) {
     contentRef.innerHTML = `<p data-id="not-found">No Pokémon found with these characters.</p>`;
+    hideOverlay();
   } else {
     addSearch();
   }
@@ -70,15 +82,18 @@ async function addSearch() {
     let allTypes = await getMoreTypes(idAkku[index]);
     bgColor(idAkku[index], type);
   }
+  hideOverlay();
 }
 
 async function addPokémon() {
+  showOverlay();
   let contentRef = document.getElementById("pokéCards");
   contentRef.innerHTML = ``;
   restrainEnd();
   for (let index = begin + 20 * (page - 1); index < safe; index++) {
     styleCard(index);
   }
+  hideOverlay();
 }
 
 async function styleCard(index) {
@@ -183,9 +198,10 @@ async function dialogStats(index) {
   let infoRef = document.getElementById("informationTab");
   infoRef.innerHTML = ``;
   for (let subindex = 0; subindex < responseAsJson.stats.length; subindex++) {
-    infoRef.innerHTML += `
-                          <p>${await capitaliseFirstLetter(responseAsJson.stats[subindex].stat.name)}: ${await responseAsJson.stats[subindex].base_stat}</p>
-                          `;
+    infoRef.innerHTML += `<p>
+                          ${await capitaliseFirstLetter(responseAsJson.stats[subindex].stat.name)}:
+                          ${await responseAsJson.stats[subindex].base_stat}
+                          </p>`;
   }
 }
 
@@ -218,6 +234,7 @@ async function switchPokémon(index, forward) {
 }
 
 function switchPage(forward) {
+  showOverlay();
   if (forward) {
     page++;
     if (page > 52) {
