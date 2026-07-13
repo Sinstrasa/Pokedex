@@ -6,10 +6,10 @@
     <link rel="stylesheet" href="styles/standard.css" />
     <link rel="stylesheet" href="styles/fonts.css" />
     <link rel="stylesheet" href="styles/variables.css" />
-    <link rel="stylesheet" href="styles/responsive.css" />
-    <link rel="stylesheet" href="styles/background.css" />
     <link rel="stylesheet" href="styles/dialog.css" />
+    <link rel="stylesheet" href="styles/background.css" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="styles/responsive.css" />
     <script src="scripts/template.js"></script>
     <script src="scripts/bgcolor.js"></script>
     <script src="scripts.js"></script>
@@ -26,9 +26,9 @@
         <img src="assets/icons/pokeball_png.png" alt="Logo of Pokédex" />
         <h1>Pokédex</h1>
       </section>
-      <section>
+      <section class="search_section">
         <input id="searchInput" data-id="search-input" type="text" />
-        <button data-id="search-button" onclick="validateSearch()">
+        <button class="search_button" data-id="search-button" onclick="validateSearch()">
           Search
         </button>
       </section>
