@@ -19,7 +19,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px max(calc(50% - 720px), 100px);
+  padding: 20px max(calc(50% - 720px), 50px);
   background-color: red;
 }
 
@@ -28,13 +28,13 @@ h1 {
 }
 
 input {
-  width: 275px;
+  width: 200px;
 }
 
 main {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   flex: 1;
 }
 
@@ -43,8 +43,4 @@ footer {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 16px;
-  padding-top: 30px;
-  padding-bottom: 10px;
-  background-color: darkblue;
 }

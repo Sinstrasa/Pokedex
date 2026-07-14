@@ -1,7 +1,7 @@
-function pokémonCardtemplate(index, sprite, name) {
+function pokémonCardtemplate(index, sprite, name, id) {
   return `
         <button class="pokémon" id="card${+index}" data-id="card" onclick="openDialog(${index})">
-            <p>#${index}</p>
+            <p>#${id}</p>
             <section class="sprite_n_types">
                 <div class="sprites" data-id="card-image"><img src="${sprite}" alt="Picture of Pokémon Nr. ${index}"></div>
                 <div class="all_types" id="allTypes${+index}"></div>
@@ -11,7 +11,7 @@ function pokémonCardtemplate(index, sprite, name) {
         `;
 }
 
-function dialogCardTemplate(index, sprite, name) {
+function dialogCardTemplate(index, sprite, name, id) {
   return `
           <section class="sprite_buttons">
             <button id="defaultSprite" onclick="defSprite(${index})">Default</button>
@@ -20,7 +20,7 @@ function dialogCardTemplate(index, sprite, name) {
           <section class="dialog_main" id="dialogMain">
             <div id="dialogPokémonSprite" data-id="dialog-image"><img src="${sprite}" alt="Default ${name}"></div>
             <div data-id="overlay-pokemon-name" class="index_name_type">
-              <p>#${index}</p>
+              <p>#${id}</p>
               <p>${name}</p>
               <div class="all_types" id="dialogTypes"></div>
             </div>

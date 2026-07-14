@@ -4,6 +4,10 @@
     gap: 32px;
   }
 
+  input {
+    height: 36px;
+  }
+
   .search_section {
     display: flex;
     flex-direction: column;

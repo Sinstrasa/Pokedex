@@ -2,15 +2,17 @@ const BASE_URL = "https://pokeapi.co/api/v2/";
 const begin = 1;
 const end = 21;
 let page = 1;
-let idAkku = [];
 let safe = 0;
+let idAkku = [];
+let storage = [];
 
 function initialise() {
-  addPokémon();
+  saveData();
+  placeInMain();
   // search();
 }
 
-function restrainEnd() {
+async function restrainEnd() {
   safe = end + 20 * (page - 1);
   if (safe > 1022) {
     safe = 1026;
@@ -19,37 +21,30 @@ function restrainEnd() {
 
 async function resetPage() {
   document.getElementById("searchInput").value = "";
-  addPokémon();
+  placeInMain();
 }
 
 function showOverlay() {
   let overlayRef = document.getElementById("overlay");
   overlayRef.classList.add("overlay_visible");
-  disableButtons();
+  toggleButtons(true);
 }
 
 function hideOverlay() {
   let overlayRef = document.getElementById("overlay");
   overlayRef.classList.remove("overlay_visible");
-  enableButtons();
+  toggleButtons(false);
 }
 
-function disableButtons() {
-  document.getElementById("resetButton").disabled = true;
-  document.getElementById("searchButton").disabled = true;
-  document.getElementById("previous").disabled = true;
-  document.getElementById("next").disabled = true;
+function toggleButtons(isDisabled) {
+  document.getElementById("resetButton").disabled = isDisabled;
+  document.getElementById("searchButton").disabled = isDisabled;
+  document.getElementById("previous").disabled = isDisabled;
+  document.getElementById("next").disabled = isDisabled;
 }
 
-function enableButtons() {
-  document.getElementById("resetButton").disabled = false;
-  document.getElementById("searchButton").disabled = false;
-  document.getElementById("previous").disabled = false;
-  document.getElementById("next").disabled = false;
-}
-
-async function definePath(index) {
-  let response = await fetch(BASE_URL + "pokemon/" + index);
+async function definePath() {
+  let response = await fetch(BASE_URL + "pokemon?limit=100000&offset=0");
   return await response.json();
 }
 
@@ -60,7 +55,7 @@ function validateSearch() {
   let searchRef = document.getElementById("searchInput").value;
   switch (searchRef.length) {
     case 0:
-      addPokémon();
+      placeInMain();
       break;
     case 1:
     case 2:
@@ -76,7 +71,7 @@ function validateSearch() {
 async function searchPoké(input) {
   let contentRef = document.getElementById("pokéCards");
   idAkku = [];
-  for (let index = 1; index < 1026; index++) {
+  for (let index = begin; index < safe; index++) {
     let responseAsJson = await definePath(index);
     let compare = (await responseAsJson.forms[0].name).slice(0, input.length);
     if (input == compare) {
@@ -105,40 +100,53 @@ async function addSearch() {
   hideOverlay();
 }
 
-async function addPokémon() {
-  showOverlay();
+async function placeInMain() {
   let contentRef = document.getElementById("pokéCards");
   contentRef.innerHTML = ``;
   restrainEnd();
   for (let index = begin + 20 * (page - 1); index < safe; index++) {
-    styleCard(index);
+    let name = await capitaliseFirstLetter(getData(index, "name"));
+    let id = await getData(index, "id");
+    let sprite = await getData(index, "default_sprite");
+    let type = await getData(index, "types");
+    contentRef.innerHTML += pokémonCardtemplate(index, sprite, name, id);
+    // let allTypes = await getMoreTypes(index);
+    bgColor(index, type);
   }
   hideOverlay();
 }
 
-async function styleCard(index) {
-  let contentRef = document.getElementById("pokéCards");
-  let sprite = await getSprite(index);
-  let type = await getType(index);
-  let name = await getName(index);
-  contentRef.innerHTML += pokémonCardtemplate(index, sprite, name);
-  let allTypes = await getMoreTypes(index);
-  bgColor(index, type);
+// responseAsJson.results[0].url
+
+async function saveData() {
+  let responseAsJson = await definePath();
+  restrainEnd();
+  for (let index = begin - 1; index < safe - 1; index++) {
+    let temporaryUrl = await fetch(responseAsJson.results[index].url);
+    let tempUrl = await temporaryUrl.json();
+    let pokéData = {};
+    Object.assign(pokéData, {
+      name: tempUrl.forms[0].name,
+      id: tempUrl.id,
+      default_sprite: tempUrl.sprites.other.home.front_default,
+      shiny_sprite: tempUrl.sprites.other.home.front_shiny,
+      types: tempUrl.types,
+      abilities: tempUrl.abilities,
+      stats: tempUrl.stats,
+      general_attribute: [
+        tempUrl.base_experience,
+        tempUrl.height,
+        tempUrl.weight,
+      ],
+    });
+    storage.push(pokéData);
+  }
+  console.log(storage);
+  console.log(capitaliseFirstLetter(getData(0, "name")));
 }
 
-async function getSprite(index) {
-  let responseAsJson = await definePath(index);
-  return responseAsJson.sprites.other.home.front_default;
-}
-
-async function getShiny(index) {
-  let responseAsJson = await definePath(index);
-  return responseAsJson.sprites.other.home.front_shiny;
-}
-
-async function getType(index) {
-  let responseAsJson = await definePath(index);
-  return responseAsJson.types[0].type.name;
+function getData(index, path) {
+  return storage[index][path];
 }
 
 async function getMoreTypes(index) {
@@ -152,18 +160,13 @@ async function getMoreTypes(index) {
   }
 }
 
-async function getName(index) {
-  let responseAsJson = await definePath(index);
-  return capitaliseFirstLetter(responseAsJson.forms[0].name);
-}
-
 async function createDialog(index) {
-  let responseAsJson = await definePath(index);
   let dialogRef = document.getElementById("dialogDesign");
-  let sprite = await getSprite(index);
-  let name = await getName(index);
-  let type = await getType(index);
-  dialogRef.innerHTML = dialogCardTemplate(index, sprite, name);
+  let sprite = await getData(index, "default_sprite");
+    let type = await getData(index, "types");
+    let name = await getData(index, "name");
+    let id = await getData(index, "id");
+  dialogRef.innerHTML = dialogCardTemplate(index, sprite, name, id);
   let allTypes = dialogGetTypes(index);
   dialogbg(index, type);
 }
@@ -229,7 +232,11 @@ async function dialogAbilities(index) {
   let responseAsJson = await definePath(index);
   let infoRef = document.getElementById("informationTab");
   infoRef.innerHTML = ``;
-  for (let subindex = 0; subindex < responseAsJson.stats.length; subindex++) {
+  for (
+    let subindex = 0;
+    subindex < responseAsJson.abilities.length;
+    subindex++
+  ) {
     infoRef.innerHTML += `
                           <p>${await capitaliseFirstLetter(responseAsJson.abilities[subindex].ability.name)}</p>
                           `;
@@ -267,7 +274,7 @@ function switchPage(forward) {
     }
   }
   showPage();
-  addPokémon();
+  placeInMain();
 }
 
 function openDialog(index) {
@@ -287,7 +294,7 @@ function stopPropagation(event) {
   event.stopPropagation();
 }
 
-async function capitaliseFirstLetter(name) {
+function capitaliseFirstLetter(name) {
   return name[0].toUpperCase() + name.slice(1);
 }
 
@@ -297,12 +304,21 @@ function getFocus(id) {
 
 function showPage() {
   let pageRef = document.getElementById("page");
-  pageRef.innerHTML = `Page ${page} / 52`
+  pageRef.innerHTML = `Page ${page} / 52`;
 }
 
 // Checking for specific elements and its paths
 async function search() {
-  let response = await fetch(BASE_URL + "pokemon/" + 1);
+  let response = await fetch(BASE_URL + "pokemon?limit=100000&offset=0");
   let responseAsJson = await response.json();
-  console.log(await responseAsJson.forms[0].name);
+  console.log(await responseAsJson.results[0].url);
 }
+
+// .forms[0].name
+// .sprites.other.home.front_default
+// .sprites.other.home.front_shiny
+// .types[0].type.name
+// await capitaliseFirstLetter(responseAsJson.types[subindex].type.name)
+// pokemon?limit=100000&offset=0
+// "pokemon/" + 1
+// https://pokeapi.co/api/v2/pokemon/10001/

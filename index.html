@@ -32,7 +32,12 @@
         <button class="reset_button" id="resetButton" onclick="resetPage()">
           Reset
         </button>
-        <input id="searchInput" data-id="search-input" type="search" />
+        <input
+          id="searchInput"
+          data-id="search-input"
+          type="search"
+          placeholder="Search for Pokémon"
+        />
         <button
           class="search_button"
           id="searchButton"
@@ -44,21 +49,21 @@
       </section>
     </header>
     <main data-id="content">
+      <dialog id="dialog" data-id="dialog" onclick="closeDialog()">
+        <article
+          class="dialog_design"
+          id="dialogDesign"
+          onclick="stopPropagation(event)"
+        ></article>
+      </dialog>
       <section class="overlay" id="overlay">
         <div class="gif">
           <img src="assets/icons/pokeball_gif.gif" alt="Pokéball Gif" />
         </div>
       </section>
       <section class="poké_cards" id="pokéCards"></section>
-      <section>
-        <dialog id="dialog" data-id="dialog" onclick="closeDialog()">
-          <article
-            class="dialog_design"
-            id="dialogDesign"
-            onclick="stopPropagation(event)"
-          ></article>
-        </dialog>
-      </section>
+    </main>
+    <footer>
       <section class="change_page">
         <button
           id="previous"
@@ -76,17 +81,20 @@
           <p>Next Page</p>
         </button>
       </section>
-    </main>
-    <footer>
       <section class="da">
-        <img src="assets/icons/da_logo.svg" alt="Logo of Developer Akademie" />
-        <img
-          src="assets/icons/da_title.svg"
-          alt="Title of Developer Akademie"
-        />
-      </section>
-      <section class="copyright">
-        <p>© 2023 Developer Akademie GmbH</p>
+        <div>
+          <img
+            src="assets/icons/da_logo.svg"
+            alt="Logo of Developer Akademie"
+          />
+          <img
+            src="assets/icons/da_title.svg"
+            alt="Title of Developer Akademie"
+          />
+        </div>
+        <section class="copyright">
+          <p>© 2023 Developer Akademie GmbH</p>
+        </section>
       </section>
     </footer>
   </body>
