@@ -15,8 +15,8 @@ async function initialise() {
 async function restrainEnd() {
   let responseAsJson = await definePath();
   safe = end + 20 * (page - 1);
-  if (safe > responseAsJson.length) {
-    safe = responseAsJson.length - 1;
+  if (safe > responseAsJson.count) {
+    safe = responseAsJson.count;
   }
 }
 
@@ -130,7 +130,7 @@ async function placeInMain() {
 async function saveData() {
   let responseAsJson = await definePath();
   await restrainEnd();
-  for (let index = begin; index < safe; index++) {
+  for (let index = begin + 20 * (page - 1); index < safe; index++) {
     let temporaryUrl = await fetch(responseAsJson.results[index].url);
     let tempUrl = await temporaryUrl.json();
     let pokéData = {};
@@ -150,7 +150,7 @@ async function saveData() {
     });
     await storage.push(pokéData);
   }
-  console.log(await storage[0]['abilities']);
+  // console.log(await storage[0]['abilities']);
   // console.log (capitaliseFirstLetter(await getData(0, "name")));
 }
 
@@ -261,21 +261,23 @@ async function switchPokémon(index, forward) {
   }
 }
 
-function switchPage(forward) {
+async function switchPage(forward) {
   showOverlay();
   if (forward) {
-    page++;
+    await page++;
+    await saveData();
     if (page > 68) {
       page = 1;
     }
   } else {
-    page--;
+    await page--;
     if (page <= 0) {
       page = 68;
     }
+    await saveData();
   }
   showPage();
-  placeInMain();
+  await placeInMain();
 }
 
 function openDialog(index) {
