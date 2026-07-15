@@ -14,8 +14,8 @@ function pokémonCardtemplate(index, sprite, name, id) {
 function dialogCardTemplate(index, sprite, name, id) {
   return `
           <section class="sprite_buttons">
-            <button id="defaultSprite" onclick="defSprite(${index})">Default</button>
-            <button id="shinySprite" onclick="shySprite(${index})">Shiny</button>
+            <button id="defaultSprite" onclick="showSprite(${index}, ${id}, 'default_sprite')">Default</button>
+            <button id="shinySprite" onclick="showSprite(${index}, ${id}, 'shiny_sprite')">Shiny</button>
           </section>
           <section class="dialog_main" id="dialogMain">
             <div id="dialogPokémonSprite" data-id="dialog-image"><img src="${sprite}" alt="Default ${name}"></div>

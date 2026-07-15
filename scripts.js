@@ -1,21 +1,22 @@
 const BASE_URL = "https://pokeapi.co/api/v2/";
-const begin = 1;
-const end = 21;
+const begin = 0;
+const end = 20;
 let page = 1;
 let safe = 0;
 let idAkku = [];
 let storage = [];
 
-function initialise() {
-  saveData();
-  placeInMain();
+async function initialise() {
+  await saveData();
+  await placeInMain();
   // search();
 }
 
 async function restrainEnd() {
+  let responseAsJson = await definePath();
   safe = end + 20 * (page - 1);
-  if (safe > 1022) {
-    safe = 1026;
+  if (safe > responseAsJson.length) {
+    safe = responseAsJson.length - 1;
   }
 }
 
@@ -103,14 +104,14 @@ async function addSearch() {
 async function placeInMain() {
   let contentRef = document.getElementById("pokéCards");
   contentRef.innerHTML = ``;
-  restrainEnd();
+  await restrainEnd();
   for (let index = begin + 20 * (page - 1); index < safe; index++) {
-    let name = await capitaliseFirstLetter(getData(index, "name"));
+    let name = capitaliseFirstLetter(await getData(index, "name"));
     let id = await getData(index, "id");
     let sprite = await getData(index, "default_sprite");
-    let type = await getData(index, "types");
+    let type = await getData(index, "type");
     contentRef.innerHTML += pokémonCardtemplate(index, sprite, name, id);
-    // let allTypes = await getMoreTypes(index);
+    let allTypes = await getMoreTypes(index);
     bgColor(index, type);
   }
   hideOverlay();
@@ -118,10 +119,18 @@ async function placeInMain() {
 
 // responseAsJson.results[0].url
 
+// async function validateSaveData(id) {
+//   for (let index = 0; index < array.length; index++) {
+//     if (storage[index].include(id)) {
+//       break;
+//     }
+//   }
+// }
+
 async function saveData() {
   let responseAsJson = await definePath();
-  restrainEnd();
-  for (let index = begin - 1; index < safe - 1; index++) {
+  await restrainEnd();
+  for (let index = begin; index < safe; index++) {
     let temporaryUrl = await fetch(responseAsJson.results[index].url);
     let tempUrl = await temporaryUrl.json();
     let pokéData = {};
@@ -139,23 +148,29 @@ async function saveData() {
         tempUrl.weight,
       ],
     });
-    storage.push(pokéData);
+    await storage.push(pokéData);
   }
-  console.log(storage);
-  console.log(capitaliseFirstLetter(getData(0, "name")));
+  console.log(await storage[0]['abilities']);
+  // console.log (capitaliseFirstLetter(await getData(0, "name")));
 }
 
-function getData(index, path) {
-  return storage[index][path];
+async function getData(index, path) {
+  switch (path) {
+    case 'type':
+      return await storage[index]['types'][0].type.name;
+      break;
+    default:
+      return await storage[index][path];
+      break;
+  }
 }
 
 async function getMoreTypes(index) {
-  let responseAsJson = await definePath(index);
   let typesRef = document.getElementById("allTypes" + index);
   typesRef.innerHTML = ``;
-  for (let subindex = 0; subindex < responseAsJson.types.length; subindex++) {
+  for (let subindex = 0; subindex < storage[index]["types"].length; subindex++) {
     typesRef.innerHTML += `
-                          <p class="types">${await capitaliseFirstLetter(responseAsJson.types[subindex].type.name)}</p>
+                          <p class="types">${await capitaliseFirstLetter(storage[index]["types"][subindex].type.name)}</p>
                           `;
   }
 }
@@ -163,52 +178,40 @@ async function getMoreTypes(index) {
 async function createDialog(index) {
   let dialogRef = document.getElementById("dialogDesign");
   let sprite = await getData(index, "default_sprite");
-    let type = await getData(index, "types");
-    let name = await getData(index, "name");
-    let id = await getData(index, "id");
+  let type = await getData(index, "type");
+  let name = capitaliseFirstLetter(await getData(index, "name"));
+  let id = await getData(index, "id");
   dialogRef.innerHTML = dialogCardTemplate(index, sprite, name, id);
   let allTypes = dialogGetTypes(index);
   dialogbg(index, type);
 }
 
-async function defSprite(index) {
+async function showSprite(index, id, path) {
   let spriteRef = document.getElementById("dialogPokémonSprite");
-  let def = await getSprite(index);
+  let sprite = await getData(index, path);
   spriteRef.innerHTML = `
                         <img
-                        src="${def}"
-                        alt="default #${index}">
-                        `;
-}
-
-async function shySprite(index) {
-  let spriteRef = document.getElementById("dialogPokémonSprite");
-  let shy = await getShiny(index);
-  spriteRef.innerHTML = `
-                        <img
-                        src="${shy}"
-                        alt="shiny #${index}">
+                        src="${sprite}"
+                        alt="Sprite #${id}">
                         `;
 }
 
 async function dialogGetTypes(index) {
-  let responseAsJson = await definePath(index);
   let typesRef = document.getElementById("dialogTypes");
   typesRef.innerHTML = ``;
-  for (let subindex = 0; subindex < responseAsJson.types.length; subindex++) {
+  for (let subindex = 0; subindex < storage[index]["types"].length; subindex++) {
     typesRef.innerHTML += `
-                          <p class="types">${await capitaliseFirstLetter(responseAsJson.types[subindex].type.name)}</p>
+                          <p class="types">${await capitaliseFirstLetter(storage[index]["types"][subindex].type.name)}</p>
                           `;
   }
 }
 
 async function dialogGeneral(index) {
-  let responseAsJson = await definePath(index);
   let infoRef = document.getElementById("informationTab");
   infoRef.innerHTML = ``;
-  let baseXp = responseAsJson.base_experience;
-  let height = responseAsJson.height;
-  let weight = responseAsJson.weight;
+  let baseXp = storage[index]["general_attribute"][0];
+  let height = storage[index]["general_attribute"][1];
+  let weight = storage[index]["general_attribute"][2];
   infoRef.innerHTML = `
                       <p>Base Exp: ${await baseXp}xp</p>
                       <p>Height: ${await height}0cm</p>
@@ -217,28 +220,26 @@ async function dialogGeneral(index) {
 }
 
 async function dialogStats(index) {
-  let responseAsJson = await definePath(index);
   let infoRef = document.getElementById("informationTab");
   infoRef.innerHTML = ``;
-  for (let subindex = 0; subindex < responseAsJson.stats.length; subindex++) {
+  for (let subindex = 0; subindex < storage[index]["stats"].length; subindex++) {
     infoRef.innerHTML += `<p>
-                          ${await capitaliseFirstLetter(responseAsJson.stats[subindex].stat.name)}:
-                          ${await responseAsJson.stats[subindex].base_stat}
+                          ${await capitaliseFirstLetter(await storage[index]["stats"][subindex].stat.name)}:
+                          ${await storage[index]["stats"][subindex].base_stat}
                           </p>`;
   }
 }
 
 async function dialogAbilities(index) {
-  let responseAsJson = await definePath(index);
   let infoRef = document.getElementById("informationTab");
   infoRef.innerHTML = ``;
   for (
     let subindex = 0;
-    subindex < responseAsJson.abilities.length;
+    subindex < storage[index]["abilities"].length;
     subindex++
   ) {
     infoRef.innerHTML += `
-                          <p>${await capitaliseFirstLetter(responseAsJson.abilities[subindex].ability.name)}</p>
+                          <p>${await capitaliseFirstLetter(await storage[index]["abilities"][subindex].ability.name)}</p>
                           `;
   }
 }
@@ -264,13 +265,13 @@ function switchPage(forward) {
   showOverlay();
   if (forward) {
     page++;
-    if (page > 52) {
+    if (page > 68) {
       page = 1;
     }
   } else {
     page--;
     if (page <= 0) {
-      page = 52;
+      page = 68;
     }
   }
   showPage();
@@ -304,7 +305,7 @@ function getFocus(id) {
 
 function showPage() {
   let pageRef = document.getElementById("page");
-  pageRef.innerHTML = `Page ${page} / 52`;
+  pageRef.innerHTML = `Page ${page} / 68`;
 }
 
 // Checking for specific elements and its paths
