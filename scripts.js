@@ -49,6 +49,78 @@ async function definePath() {
   return await response.json();
 }
 
+async function placeInMain() {
+  let responseAsJson = await definePath();
+  let contentRef = document.getElementById("pokéCards");
+  contentRef.innerHTML = ``;
+  await restrainEnd();
+  for (let index = begin + 20 * (page - 1); index < safe; index++) {
+    let temporaryUrl = await fetch(responseAsJson.results[index].url);
+    let tempUrl = await temporaryUrl.json();
+    let subindex = storage.findIndex(findId => findId.id === tempUrl.id);
+    let name = capitaliseFirstLetter(await getData(subindex, "name"));
+    let id = await getData(subindex, "id");
+    let sprite = await getData(subindex, "default_sprite");
+    let type = await getData(subindex, "type");
+    contentRef.innerHTML += pokémonCardtemplate(subindex, sprite, name, id);
+    let allTypes = await getMoreTypes(subindex);
+    bgColor(subindex, type);
+  }
+  hideOverlay();
+}
+
+async function saveData() {
+  let responseAsJson = await definePath();
+  await restrainEnd();
+  for (let index = begin + 20 * (page - 1); index < safe; index++) {
+    let temporaryUrl = await fetch(responseAsJson.results[index].url);
+    let tempUrl = await temporaryUrl.json();
+    let pokéData = {};
+    Object.assign(pokéData, {
+      name: tempUrl.forms[0].name,
+      id: tempUrl.id,
+      default_sprite: tempUrl.sprites.other.home.front_default,
+      shiny_sprite: tempUrl.sprites.other.home.front_shiny,
+      types: tempUrl.types,
+      abilities: tempUrl.abilities,
+      stats: tempUrl.stats,
+      general_attribute: [
+        tempUrl.base_experience,
+        tempUrl.height,
+        tempUrl.weight,
+      ],
+    });
+    await storage.push(pokéData);
+  }
+  // console.log(await storage[0]['abilities']);
+  // console.log (capitaliseFirstLetter(await getData(0, "name")));
+}
+
+async function getData(index, path) {
+  switch (path) {
+    case "type":
+      return await storage[index]["types"][0].type.name;
+      break;
+    default:
+      return await storage[index][path];
+      break;
+  }
+}
+
+async function getMoreTypes(index) {
+  let typesRef = document.getElementById("allTypes" + index);
+  typesRef.innerHTML = ``;
+  for (
+    let subindex = 0;
+    subindex < storage[index]["types"].length;
+    subindex++
+  ) {
+    typesRef.innerHTML += `
+                          <p class="types">${await capitaliseFirstLetter(storage[index]["types"][subindex].type.name)}</p>
+                          `;
+  }
+}
+
 function validateSearch() {
   showOverlay();
   let contentRef = document.getElementById("pokéCards");
@@ -101,80 +173,6 @@ async function addSearch() {
   hideOverlay();
 }
 
-async function placeInMain() {
-  let contentRef = document.getElementById("pokéCards");
-  contentRef.innerHTML = ``;
-  await restrainEnd();
-  for (let index = begin + 20 * (page - 1); index < safe; index++) {
-    let name = capitaliseFirstLetter(await getData(index, "name"));
-    let id = await getData(index, "id");
-    let sprite = await getData(index, "default_sprite");
-    let type = await getData(index, "type");
-    contentRef.innerHTML += pokémonCardtemplate(index, sprite, name, id);
-    let allTypes = await getMoreTypes(index);
-    bgColor(index, type);
-  }
-  hideOverlay();
-}
-
-// responseAsJson.results[0].url
-
-// async function validateSaveData(id) {
-//   for (let index = 0; index < array.length; index++) {
-//     if (storage[index].include(id)) {
-//       break;
-//     }
-//   }
-// }
-
-async function saveData() {
-  let responseAsJson = await definePath();
-  await restrainEnd();
-  for (let index = begin + 20 * (page - 1); index < safe; index++) {
-    let temporaryUrl = await fetch(responseAsJson.results[index].url);
-    let tempUrl = await temporaryUrl.json();
-    let pokéData = {};
-    Object.assign(pokéData, {
-      name: tempUrl.forms[0].name,
-      id: tempUrl.id,
-      default_sprite: tempUrl.sprites.other.home.front_default,
-      shiny_sprite: tempUrl.sprites.other.home.front_shiny,
-      types: tempUrl.types,
-      abilities: tempUrl.abilities,
-      stats: tempUrl.stats,
-      general_attribute: [
-        tempUrl.base_experience,
-        tempUrl.height,
-        tempUrl.weight,
-      ],
-    });
-    await storage.push(pokéData);
-  }
-  // console.log(await storage[0]['abilities']);
-  // console.log (capitaliseFirstLetter(await getData(0, "name")));
-}
-
-async function getData(index, path) {
-  switch (path) {
-    case 'type':
-      return await storage[index]['types'][0].type.name;
-      break;
-    default:
-      return await storage[index][path];
-      break;
-  }
-}
-
-async function getMoreTypes(index) {
-  let typesRef = document.getElementById("allTypes" + index);
-  typesRef.innerHTML = ``;
-  for (let subindex = 0; subindex < storage[index]["types"].length; subindex++) {
-    typesRef.innerHTML += `
-                          <p class="types">${await capitaliseFirstLetter(storage[index]["types"][subindex].type.name)}</p>
-                          `;
-  }
-}
-
 async function createDialog(index) {
   let dialogRef = document.getElementById("dialogDesign");
   let sprite = await getData(index, "default_sprite");
@@ -199,7 +197,11 @@ async function showSprite(index, id, path) {
 async function dialogGetTypes(index) {
   let typesRef = document.getElementById("dialogTypes");
   typesRef.innerHTML = ``;
-  for (let subindex = 0; subindex < storage[index]["types"].length; subindex++) {
+  for (
+    let subindex = 0;
+    subindex < storage[index]["types"].length;
+    subindex++
+  ) {
     typesRef.innerHTML += `
                           <p class="types">${await capitaliseFirstLetter(storage[index]["types"][subindex].type.name)}</p>
                           `;
@@ -222,7 +224,11 @@ async function dialogGeneral(index) {
 async function dialogStats(index) {
   let infoRef = document.getElementById("informationTab");
   infoRef.innerHTML = ``;
-  for (let subindex = 0; subindex < storage[index]["stats"].length; subindex++) {
+  for (
+    let subindex = 0;
+    subindex < storage[index]["stats"].length;
+    subindex++
+  ) {
     infoRef.innerHTML += `<p>
                           ${await capitaliseFirstLetter(await storage[index]["stats"][subindex].stat.name)}:
                           ${await storage[index]["stats"][subindex].base_stat}
@@ -276,7 +282,7 @@ async function switchPage(forward) {
     }
     await saveData();
   }
-  showPage();
+  await showPage();
   await placeInMain();
 }
 
