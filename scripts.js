@@ -9,7 +9,6 @@ let storage = [];
 async function initialise() {
   await saveData();
   await placeInMain();
-  // search();
 }
 
 async function restrainEnd() {
@@ -92,8 +91,6 @@ async function saveData() {
     });
     await storage.push(pokéData);
   }
-  // console.log(await storage[0]['abilities']);
-  // console.log (capitaliseFirstLetter(await getData(0, "name")));
 }
 
 async function getData(index, path) {
@@ -323,18 +320,9 @@ function showPage() {
   pageRef.innerHTML = `Page ${page} / 68`;
 }
 
-// Checking for specific elements and its paths
+// For administrative purposes only
 async function search() {
   let response = await fetch(BASE_URL + "pokemon?limit=100000&offset=0");
   let responseAsJson = await response.json();
   console.log(await responseAsJson.results[0].url);
 }
-
-// .forms[0].name
-// .sprites.other.home.front_default
-// .sprites.other.home.front_shiny
-// .types[0].type.name
-// await capitaliseFirstLetter(responseAsJson.types[subindex].type.name)
-// pokemon?limit=100000&offset=0
-// "pokemon/" + 1
-// https://pokeapi.co/api/v2/pokemon/10001/
