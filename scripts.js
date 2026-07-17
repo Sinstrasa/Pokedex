@@ -57,7 +57,7 @@ async function placeInMain() {
   for (let index = begin + 20 * (page - 1); index < safe; index++) {
     let temporaryUrl = await fetch(responseAsJson.results[index].url);
     let tempUrl = await temporaryUrl.json();
-    let subindex = storage.findIndex(findId => findId.id === tempUrl.id);
+    let subindex = storage.findIndex((findId) => findId.id === tempUrl.id);
     let name = capitaliseFirstLetter(await getData(subindex, "name"));
     let id = await getData(subindex, "id");
     let sprite = await getData(subindex, "default_sprite");
@@ -144,9 +144,8 @@ function validateSearch() {
 async function searchPoké(input) {
   let contentRef = document.getElementById("pokéCards");
   idAkku = [];
-  for (let index = begin; index < safe; index++) {
-    let responseAsJson = await definePath(index);
-    let compare = (await responseAsJson.forms[0].name).slice(0, input.length);
+  for (let index = 0; index < storage.length; index++) {
+    let compare = (await storage[index].name).slice(0, input.length);
     if (input == compare) {
       idAkku.push(index);
     }
@@ -162,11 +161,11 @@ async function searchPoké(input) {
 async function addSearch() {
   let contentRef = document.getElementById("pokéCards");
   for (let index = 0; index < idAkku.length; index++) {
-    let responseAsJson = await definePath(idAkku[index]);
-    let sprite = await getSprite(idAkku[index]);
-    let type = await getType(idAkku[index]);
-    let name = await getName(idAkku[index]);
-    contentRef.innerHTML += pokémonCardtemplate(idAkku[index], sprite, name);
+    let sprite = await getData(idAkku[index], "default_sprite");
+    let type = await getData(idAkku[index], "type");
+    let name = await getData(idAkku[index], "name");
+    let id = await getData(idAkku[index], "id")
+    contentRef.innerHTML += pokémonCardtemplate(idAkku[index], sprite, name, id);
     let allTypes = await getMoreTypes(idAkku[index]);
     bgColor(idAkku[index], type);
   }
