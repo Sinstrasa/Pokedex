@@ -49,4 +49,8 @@
   .close p {
     font-size: 24px;
   }
+
+  .change_page {
+    gap: 16px;
+  }
 }

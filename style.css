@@ -101,3 +101,7 @@
 .copyright {
   color: white;
 }
+
+.no_hover_effect:hover {
+  background-color: initial;
+}
