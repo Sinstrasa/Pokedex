@@ -270,7 +270,6 @@ async function switchPage(forward) {
   showOverlay();
   if (forward) {
     await page++;
-    await saveData();
     if (page > 68) {
       page = 1;
     }
@@ -279,10 +278,19 @@ async function switchPage(forward) {
     if (page <= 0) {
       page = 68;
     }
-    await saveData();
   }
   await showPage();
+  await checkStorage();
   await placeInMain();
+}
+
+async function checkStorage() {
+  let responseAsJson = await definePath();
+  let temporaryUrl = await fetch(responseAsJson.results[begin + 20 * (page - 1)].url);
+  let tempUrl = await temporaryUrl.json();
+  if (!(storage.some(findId => findId.id === tempUrl.id))) {
+    saveData();
+  } 
 }
 
 function openDialog(index) {
