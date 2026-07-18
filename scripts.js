@@ -53,6 +53,7 @@ async function definePath() {
 }
 
 async function placeInMain() {
+  showOverlay();
   let responseAsJson = await definePath();
   let contentRef = document.getElementById("pokéCards");
   contentRef.innerHTML = ``;
@@ -277,6 +278,7 @@ async function switchPage(forward) {
   await showPage();
   await checkStorage();
   await placeInMain();
+  hideOverlay();
 }
 
 async function checkStorage() {
