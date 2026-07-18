@@ -182,6 +182,7 @@ async function createDialog(index) {
   dialogRef.innerHTML = dialogCardTemplate(index, sprite, name, id);
   let allTypes = dialogGetTypes(index);
   dialogbg(index, type);
+  dialogGeneral(index);
 }
 
 async function showSprite(index, id, path) {
