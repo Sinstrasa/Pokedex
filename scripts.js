@@ -6,17 +6,23 @@ let safe = 0;
 let idAkku = [];
 let storage = [];
 let isSearch = false;
+let count = 0;
 
 async function initialise() {
+  await defineCount();
   await saveData();
   await placeInMain();
 }
 
-async function restrainEnd() {
+async function defineCount() {
   let responseAsJson = await definePath();
+  count = responseAsJson.count;
+}
+
+async function restrainEnd() {
   safe = end + 20 * (page - 1);
-  if (safe > responseAsJson.count) {
-    safe = responseAsJson.count;
+  if (safe > count) {
+    safe = count;
   }
 }
 
@@ -77,7 +83,7 @@ async function cardMain(index) {
   let type = await getData(subindex, "type");
   contentRef.innerHTML += pokémonCardtemplate(subindex, sprite, name, id);
   let allTypes = await getMoreTypes(subindex);
-  bgColor(subindex, type);
+  bgColor(subindex, type, "card");
 }
 
 async function saveData() {
@@ -93,6 +99,7 @@ async function addToStorage(index) {
   let tempUrl = await temporaryUrl.json();
   let pokéData = {};
   Object.assign(pokéData, {
+    page: page,
     name: tempUrl.forms[0].name,
     id: tempUrl.id,
     default_sprite: tempUrl.sprites.other.home.front_default,
@@ -136,7 +143,7 @@ async function createDialog(index) {
   let id = await getData(index, "id");
   dialogRef.innerHTML = dialogCardTemplate(index, sprite, name, id);
   let allTypes = dialogGetTypes(index);
-  dialogbg(index, type);
+  bgColor(index, type, "dialogMain");
   dialogGeneral(index);
 }
 
@@ -233,12 +240,7 @@ async function switchPage(forward) {
 }
 
 async function checkStorage() {
-  let responseAsJson = await definePath();
-  let temporaryUrl = await fetch(
-    responseAsJson.results[begin + 20 * (page - 1)].url,
-  );
-  let tempUrl = await temporaryUrl.json();
-  if (!(await storage.some((findId) => findId.id === tempUrl.id))) {
+  if (!(await storage.some((findId) => findId.page === page))) {
     await saveData();
   }
 }
