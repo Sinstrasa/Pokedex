@@ -54,14 +54,9 @@ async function addSearch() {
     let type = await getData(idAkku[index], "type");
     let name = capitaliseFirstLetter(await getData(idAkku[index], "name"));
     let id = await getData(idAkku[index], "id");
-    contentRef.innerHTML += pokémonCardtemplate(
-      idAkku[index],
-      sprite,
-      name,
-      id,
-    );
+    contentRef.innerHTML += pokémonCardtemplate(idAkku[index], sprite, name, id);
     let allTypes = await getMoreTypes(idAkku[index]);
-    bgColor(idAkku[index], type);
+    bgColor(idAkku[index], type, "card");
   }
   hideOverlay();
 }
