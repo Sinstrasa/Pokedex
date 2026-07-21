@@ -56,48 +56,53 @@ async function definePath() {
 
 async function placeInMain() {
   showOverlay();
-  let responseAsJson = await definePath();
   let contentRef = document.getElementById("pokéCards");
   contentRef.innerHTML = ``;
   await restrainEnd();
   for (let index = begin + 20 * (page - 1); index < safe; index++) {
-    let temporaryUrl = await fetch(responseAsJson.results[index].url);
-    let tempUrl = await temporaryUrl.json();
-    let subindex = await storage.findIndex((findId) => findId.id === tempUrl.id);
-    let name = capitaliseFirstLetter(await getData(subindex, "name"));
-    let id = await getData(subindex, "id");
-    let sprite = await getData(subindex, "default_sprite");
-    let type = await getData(subindex, "type");
-    contentRef.innerHTML += pokémonCardtemplate(subindex, sprite, name, id);
-    let allTypes = await getMoreTypes(subindex);
-    bgColor(subindex, type);
+    await cardMain(index);
   }
   hideOverlay();
 }
 
-async function saveData() {
+async function cardMain(index) {
+  let contentRef = document.getElementById("pokéCards");
   let responseAsJson = await definePath();
+  let temporaryUrl = await fetch(responseAsJson.results[index].url);
+  let tempUrl = await temporaryUrl.json();
+  let subindex = await storage.findIndex((findId) => findId.id === tempUrl.id);
+  let name = capitaliseFirstLetter(await getData(subindex, "name"));
+  let id = await getData(subindex, "id");
+  let sprite = await getData(subindex, "default_sprite");
+  let type = await getData(subindex, "type");
+  contentRef.innerHTML += pokémonCardtemplate(subindex, sprite, name, id);
+  let allTypes = await getMoreTypes(subindex);
+  bgColor(subindex, type);
+}
+
+async function saveData() {
   await restrainEnd();
   for (let index = begin + 20 * (page - 1); index < safe; index++) {
-    let temporaryUrl = await fetch(responseAsJson.results[index].url);
-    let tempUrl = await temporaryUrl.json();
-    let pokéData = {};
-    Object.assign(pokéData, {
-      name: tempUrl.forms[0].name,
-      id: tempUrl.id,
-      default_sprite: tempUrl.sprites.other.home.front_default,
-      shiny_sprite: tempUrl.sprites.other.home.front_shiny,
-      types: tempUrl.types,
-      abilities: tempUrl.abilities,
-      stats: tempUrl.stats,
-      general_attribute: [
-        tempUrl.base_experience,
-        tempUrl.height,
-        tempUrl.weight,
-      ],
-    });
-    await storage.push(pokéData);
+    await addToStorage(index);
   }
+}
+
+async function addToStorage(index) {
+  let responseAsJson = await definePath();
+  let temporaryUrl = await fetch(responseAsJson.results[index].url);
+  let tempUrl = await temporaryUrl.json();
+  let pokéData = {};
+  Object.assign(pokéData, {
+    name: tempUrl.forms[0].name,
+    id: tempUrl.id,
+    default_sprite: tempUrl.sprites.other.home.front_default,
+    shiny_sprite: tempUrl.sprites.other.home.front_shiny,
+    types: tempUrl.types,
+    abilities: tempUrl.abilities,
+    stats: tempUrl.stats,
+    general_attribute: [tempUrl.base_experience, tempUrl.height, tempUrl.weight],
+  });
+  await storage.push(pokéData);
 }
 
 async function getData(index, path) {
@@ -119,8 +124,7 @@ async function getMoreTypes(index) {
     subindex < storage[index]["types"].length;
     subindex++
   ) {
-    typesRef.innerHTML +=
-      `<p class="types">${await capitaliseFirstLetter(storage[index]["types"][subindex].type.name)}</p>`;
+    typesRef.innerHTML += `<p class="types">${await capitaliseFirstLetter(storage[index]["types"][subindex].type.name)}</p>`;
   }
 }
 
@@ -139,8 +143,7 @@ async function createDialog(index) {
 async function showSprite(index, id, path) {
   let spriteRef = document.getElementById("dialogPokémonSprite");
   let sprite = await getData(index, path);
-  spriteRef.innerHTML =
-    `<img src="${sprite}" alt="Sprite #${id}"> `;
+  spriteRef.innerHTML = `<img src="${sprite}" alt="Sprite #${id}"> `;
 }
 
 async function dialogGetTypes(index) {
@@ -151,8 +154,7 @@ async function dialogGetTypes(index) {
     subindex < storage[index]["types"].length;
     subindex++
   ) {
-    typesRef.innerHTML +=
-      `<p class="types">${await capitaliseFirstLetter(storage[index]["types"][subindex].type.name)}</p>`;
+    typesRef.innerHTML += `<p class="types">${await capitaliseFirstLetter(storage[index]["types"][subindex].type.name)}</p>`;
   }
 }
 
@@ -162,8 +164,7 @@ async function dialogGeneral(index) {
   let baseXp = storage[index]["general_attribute"][0];
   let height = storage[index]["general_attribute"][1];
   let weight = storage[index]["general_attribute"][2];
-  infoRef.innerHTML = 
-    ` <p>Base Exp: ${await baseXp}xp</p>
+  infoRef.innerHTML = ` <p>Base Exp: ${await baseXp}xp</p>
       <p>Height: ${await height}0cm</p>
       <p>Weight: ${await weight}0g</p>`;
 }
@@ -176,8 +177,7 @@ async function dialogStats(index) {
     subindex < storage[index]["stats"].length;
     subindex++
   ) {
-    infoRef.innerHTML +=
-      `<p>
+    infoRef.innerHTML += `<p>
         ${await capitaliseFirstLetter(await storage[index]["stats"][subindex].stat.name)}:
         ${await storage[index]["stats"][subindex].base_stat}
       </p>`;
@@ -192,8 +192,7 @@ async function dialogAbilities(index) {
     subindex < storage[index]["abilities"].length;
     subindex++
   ) {
-    infoRef.innerHTML +=
-      `<p>${await capitaliseFirstLetter(await storage[index]["abilities"][subindex].ability.name)}</p>`;
+    infoRef.innerHTML += `<p>${await capitaliseFirstLetter(await storage[index]["abilities"][subindex].ability.name)}</p>`;
   }
 }
 
@@ -235,11 +234,13 @@ async function switchPage(forward) {
 
 async function checkStorage() {
   let responseAsJson = await definePath();
-  let temporaryUrl = await fetch(responseAsJson.results[begin + 20 * (page - 1)].url);
+  let temporaryUrl = await fetch(
+    responseAsJson.results[begin + 20 * (page - 1)].url,
+  );
   let tempUrl = await temporaryUrl.json();
-  if (!(await storage.some(findId => findId.id === tempUrl.id))) {
+  if (!(await storage.some((findId) => findId.id === tempUrl.id))) {
     await saveData();
-  } 
+  }
 }
 
 function openDialog(index) {
