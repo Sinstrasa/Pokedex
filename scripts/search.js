@@ -32,9 +32,11 @@ async function searchPoké(input) {
   let contentRef = document.getElementById("pokéCards");
   idAkku = [];
   for (let index = 0; index < storage.length; index++) {
-    let compare = (await storage[index].name).slice(0, input.length);
-    if (input == compare) {
-      idAkku.push(index);
+    for (let subindex = 0; subindex < (await storage[index].name.length); subindex++) {
+      let compare = (await storage[index].name).slice(subindex, input.length+subindex);
+      if (input == compare) {
+        idAkku.push(index);
+      }
     }
   }
   if (idAkku.length == 0) {
