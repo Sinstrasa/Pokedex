@@ -65,25 +65,28 @@ async function placeInMain() {
   let contentRef = document.getElementById("pokéCards");
   contentRef.innerHTML = ``;
   await restrainEnd();
-  for (let index = begin + 20 * (page - 1); index < safe; index++) {
-    await cardMain(index);
-  }
+  await cardMain();
   hideOverlay();
 }
 
-async function cardMain(index) {
+async function cardMain() {
   let contentRef = document.getElementById("pokéCards");
-  let responseAsJson = await definePath();
-  let temporaryUrl = await fetch(responseAsJson.results[index].url);
-  let tempUrl = await temporaryUrl.json();
-  let subindex = await storage.findIndex((findId) => findId.id === tempUrl.id);
-  let name = capitaliseFirstLetter(await getData(subindex, "name"));
-  let id = await getData(subindex, "id");
-  let sprite = await getData(subindex, "default_sprite");
-  let type = await getData(subindex, "type");
-  contentRef.innerHTML += pokémonCardtemplate(subindex, sprite, name, id);
-  let allTypes = await getMoreTypes(subindex);
-  bgColor(subindex, type, "card");
+  let boundary = 0;
+  if (safe == end + 20 * (page - 1)) {
+    boundary = end;
+  } else {
+    boundary = 20 - (end + 20 * (page - 1) - safe);
+  }
+  for (let index = begin; index < boundary; index++) {
+    let subindex = await storage.findIndex((findPage) => findPage.page === page);
+    let name = capitaliseFirstLetter(await getData(subindex + index, "name"));
+    let id = await getData(subindex + index, "id");
+    let sprite = await getData(subindex + index, "default_sprite");
+    let type = await getData(subindex + index, "type");
+    contentRef.innerHTML += pokémonCardtemplate(subindex + index, sprite, name, id);
+    let allTypes = await getMoreTypes(subindex + index);
+    bgColor(subindex + index, type, "card");
+  }
 }
 
 async function saveData() {
@@ -107,7 +110,11 @@ async function addToStorage(index) {
     types: tempUrl.types,
     abilities: tempUrl.abilities,
     stats: tempUrl.stats,
-    general_attribute: [tempUrl.base_experience, tempUrl.height, tempUrl.weight],
+    general_attribute: [
+      tempUrl.base_experience,
+      tempUrl.height,
+      tempUrl.weight,
+    ],
   });
   await storage.push(pokéData);
 }
