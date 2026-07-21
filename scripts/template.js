@@ -32,13 +32,13 @@ function dialogCardTemplate(index, sprite, name, id) {
           </section>
           <section class="information" id="informationTab"></section>
           <section class="switch_id">
-            <button class="arrow_left" id="left" data-id="prev-button" onclick="switchPokémon(${index}, ${false}), getFocus('left')">
+            <button class="arrow_left" id="left" data-id="prev-button" onclick="isSearchFunction(${index}, ${false}, ${isSearch}), getFocus('left')">
               <img src="assets/icons/arrow_red.svg" alt="Arrow points left">
             </button>
             <button data-id="close-dialog-button" class="close" onclick="closeDialog()">
               <p>X</p>
             </button>
-            <button class="arrow_right" id="right" data-id="next-button" onclick="switchPokémon(${index}, ${true}), getFocus('right')">
+            <button class="arrow_right" id="right" data-id="next-button" onclick="isSearchFunction(${index}, ${true}, ${isSearch}), getFocus('right')">
               <img src="assets/icons/arrow_red.svg" alt="Arrow points right">
             </button>
           </section>

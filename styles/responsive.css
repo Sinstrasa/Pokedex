@@ -42,6 +42,10 @@
     font-size: 14px;
   }
 
+  .dialog_main {
+    height: 295px;
+  }
+
   .index_name_type {
     padding: 0px 15px;
   }

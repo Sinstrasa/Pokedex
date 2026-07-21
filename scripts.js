@@ -5,6 +5,7 @@ let page = 1;
 let safe = 0;
 let idAkku = [];
 let storage = [];
+let isSearch = false;
 
 async function initialise() {
   await saveData();
@@ -20,8 +21,9 @@ async function restrainEnd() {
 }
 
 async function resetPage() {
+  isSearch = false;
   document.getElementById("searchInput").value = "";
-  placeInMain();
+  await placeInMain();
 }
 
 function showOverlay() {
@@ -120,57 +122,6 @@ async function getMoreTypes(index) {
     typesRef.innerHTML +=
       `<p class="types">${await capitaliseFirstLetter(storage[index]["types"][subindex].type.name)}</p>`;
   }
-}
-
-function validateSearch() {
-  showOverlay();
-  let contentRef = document.getElementById("pokéCards");
-  contentRef.innerHTML = ``;
-  let searchRef = document.getElementById("searchInput").value;
-  switch (searchRef.length) {
-    case 0:
-      placeInMain();
-      break;
-    case 1:
-    case 2:
-      contentRef.innerHTML = `<p>Not enough characters! Please search with more than 3 characters.</p>`;
-      hideOverlay();
-      break;
-    default:
-      searchPoké(searchRef.toLowerCase());
-      break;
-  }
-}
-
-async function searchPoké(input) {
-  let contentRef = document.getElementById("pokéCards");
-  idAkku = [];
-  for (let index = 0; index < storage.length; index++) {
-    let compare = (await storage[index].name).slice(0, input.length);
-    if (input == compare) {
-      idAkku.push(index);
-    }
-  }
-  if (idAkku.length == 0) {
-    contentRef.innerHTML = `<p data-id="not-found">No Pokémon found with these characters.</p>`;
-    hideOverlay();
-  } else {
-    addSearch();
-  }
-}
-
-async function addSearch() {
-  let contentRef = document.getElementById("pokéCards");
-  for (let index = 0; index < idAkku.length; index++) {
-    let sprite = await getData(idAkku[index], "default_sprite");
-    let type = await getData(idAkku[index], "type");
-    let name = await getData(idAkku[index], "name");
-    let id = await getData(idAkku[index], "id")
-    contentRef.innerHTML += pokémonCardtemplate(idAkku[index], sprite, name, id);
-    let allTypes = await getMoreTypes(idAkku[index]);
-    bgColor(idAkku[index], type);
-  }
-  hideOverlay();
 }
 
 async function createDialog(index) {
