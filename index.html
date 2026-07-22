@@ -24,13 +24,13 @@
   <body onload="initialise()">
     <header>
       <section class="logo">
-        <a href="https://www.youtube.com/watch?v=cvh0nX08nRw"
+        <a href="index.html"
           ><img src="assets/icons/pokeball_png.png" alt="Logo of Pokédex"
         /></a>
         <h1>Pokédex</h1>
       </section>
       <section class="search_section">
-        <button class="reset_button" id="resetButton" onclick="resetPage()">
+        <button class="reset_button" id="resetButton" aria-label="Reset" onclick="resetPage()">
           Reset
         </button>
         <input
@@ -43,6 +43,7 @@
           class="search_button"
           id="searchButton"
           data-id="search-button"
+          aria-label="Search"
           onclick="validateSearch()"
         >
           Search
@@ -50,7 +51,7 @@
       </section>
     </header>
     <main data-id="content">
-      <dialog id="dialog" data-id="dialog" onclick="closeDialog()">
+      <dialog id="dialog" data-id="dialog" aria-label="Big Card" onclick="closeDialog()">
         <article
           class="dialog_design"
           id="dialogDesign"
@@ -62,13 +63,16 @@
           <img src="assets/icons/pokeball_gif.gif" alt="Pokéball Gif" />
         </div>
       </section>
-      <section class="poké_cards" id="pokéCards"></section>
+      <section class="poké_cards" id="pokéCards">
+        <ul id="pokemons"></ul>
+      </section>
     </main>
     <footer>
       <section class="change_page">
         <button
           id="previous"
           data-id="load-more"
+          aria-label="Previous"
           onclick="(switchPage(false), getFocus('previous'))"
         >
           <p>Previous Page</p>
@@ -77,6 +81,7 @@
         <button
           id="next"
           data-id="load-more"
+          aria-label="Next"
           onclick="(switchPage(true), getFocus('next'))"
         >
           <p>Next Page</p>

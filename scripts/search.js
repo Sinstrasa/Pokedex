@@ -9,7 +9,7 @@ async function isSearchFunction(index, forward) {
 function validateSearch() {
   isSearch = true;
   showOverlay();
-  let contentRef = document.getElementById("pokéCards");
+  let contentRef = document.getElementById("pokemons");
   contentRef.innerHTML = ``;
   let searchRef = document.getElementById("searchInput").value;
   switch (searchRef.length) {
@@ -29,7 +29,7 @@ function validateSearch() {
 }
 
 async function searchPoké(input) {
-  let contentRef = document.getElementById("pokéCards");
+  let contentRef = document.getElementById("pokemons");
   idAkku = [];
   for (let index = 0; index < storage.length; index++) {
     for (let subindex = 0; subindex < (await storage[index].name.length); subindex++) {
@@ -48,7 +48,7 @@ async function searchPoké(input) {
 }
 
 async function addSearch() {
-  let contentRef = document.getElementById("pokéCards");
+  let contentRef = document.getElementById("pokemons");
   for (let index = 0; index < idAkku.length; index++) {
     let sprite = await getData(idAkku[index], "default_sprite");
     let type = await getData(idAkku[index], "type");

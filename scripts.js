@@ -62,7 +62,7 @@ async function definePath() {
 
 async function placeInMain() {
   showOverlay();
-  let contentRef = document.getElementById("pokéCards");
+  let contentRef = document.getElementById("pokemons");
   contentRef.innerHTML = ``;
   await restrainEnd();
   await cardMain();
@@ -70,7 +70,7 @@ async function placeInMain() {
 }
 
 async function cardMain() {
-  let contentRef = document.getElementById("pokéCards");
+  let contentRef = document.getElementById("pokemons");
   let boundary = 0;
   if (safe == end + 20 * (page - 1)) {
     boundary = end;
@@ -91,29 +91,29 @@ async function cardMain() {
 
 async function saveData() {
   await restrainEnd();
+  let responseAsJson = await definePath();
   for (let index = begin + 20 * (page - 1); index < safe; index++) {
-    await addToStorage(index);
+    let temporaryUrl = await fetch(responseAsJson.results[index].url);
+    let tempUrl = await temporaryUrl.json();
+    await addToStorage(tempUrl);
   }
 }
 
-async function addToStorage(index) {
-  let responseAsJson = await definePath();
-  let temporaryUrl = await fetch(responseAsJson.results[index].url);
-  let tempUrl = await temporaryUrl.json();
+async function addToStorage(obj) {
   let pokéData = {};
   Object.assign(pokéData, {
     page: page,
-    name: tempUrl.forms[0].name,
-    id: tempUrl.id,
-    default_sprite: tempUrl.sprites.other.home.front_default,
-    shiny_sprite: tempUrl.sprites.other.home.front_shiny,
-    types: tempUrl.types,
-    abilities: tempUrl.abilities,
-    stats: tempUrl.stats,
+    name: obj.forms[0].name,
+    id: obj.id,
+    default_sprite: obj.sprites.other.home.front_default,
+    shiny_sprite: obj.sprites.other.home.front_shiny,
+    types: obj.types,
+    abilities: obj.abilities,
+    stats: obj.stats,
     general_attribute: [
-      tempUrl.base_experience,
-      tempUrl.height,
-      tempUrl.weight,
+      obj.base_experience,
+      obj.height,
+      obj.weight,
     ],
   });
   await storage.push(pokéData);
@@ -242,7 +242,7 @@ async function switchPage(forward) {
   }
   await showPage();
   await checkStorage();
-  await placeInMain();
+  await resetPage();
   hideOverlay();
 }
 

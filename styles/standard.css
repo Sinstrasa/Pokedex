@@ -38,6 +38,16 @@ main {
   flex: 1;
 }
 
+ul {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-left: 0px;
+  list-style: none;
+}
+
 footer {
   display: flex;
   flex-direction: column;
